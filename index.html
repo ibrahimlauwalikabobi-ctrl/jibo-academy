@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jibo Tech Ladder Academy</title>
+<meta name="theme-color" content="#0B3C5D">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--navy:#0B3C5D;--navy2:#12557F;--gold:#F2B134;--green:#1F9D6B;--bg:#F5F8FA;--card:#fff;--ink:#1B2B34;--mut:#5B6E78;--line:#DCE5EA}
+@media(prefers-color-scheme:dark){:root{--bg:#0A1A24;--card:#11283A;--ink:#EAF2F6;--mut:#9DB3BF;--line:#1F3D52}}
+*{box-sizing:border-box;margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+header{background:var(--navy);color:#fff;padding:calc(18px + env(safe-area-inset-top)) 20px 22px}
+header h1{font-family:Georgia,serif;font-size:1.45rem;line-height:1.2}
+header p{opacity:.85;font-size:.9rem;margin-top:4px}
+main{padding:16px;max-width:640px;margin:auto}
+section{display:none}section.on{display:block}
+h2{font-family:Georgia,serif;font-size:1.25rem;margin:6px 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.btn{display:inline-block;background:var(--gold);color:#1B2B34;border:0;border-radius:10px;padding:12px 18px;font-weight:700;font-size:1rem;cursor:pointer;text-decoration:none}
+.btn.alt{background:transparent;border:2px solid var(--navy2);color:var(--ink)}
+.mut{color:var(--mut);font-size:.9rem}
+.bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:var(--green);width:0;transition:width .4s}
+.ladder{position:relative;padding-left:30px}
+.ladder:before{content:"";position:absolute;left:11px;top:8px;bottom:8px;width:4px;background:var(--line);border-radius:2px}
+.rung{position:relative}.rung:before{content:"";position:absolute;left:-27px;top:20px;width:20px;height:20px;border-radius:50%;background:var(--card);border:4px solid var(--gold)}
+.rung.done:before{background:var(--green);border-color:var(--green)}
+.rung summary{cursor:pointer;font-weight:700;list-style:none}.rung summary::-webkit-details-marker{display:none}
+.lesson{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.lesson input{width:22px;height:22px;margin-top:2px;accent-color:var(--green)}
+label{display:block;font-weight:600;margin:12px 0 4px}
+input[type=text],input[type=tel],select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;background:none;border:0;padding:10px 2px;color:var(--mut);font:inherit;font-size:.78rem;cursor:pointer}
+nav button b{display:block;font-size:1.3rem;font-weight:400}
+nav button.on{color:var(--navy2);font-weight:700}@media(prefers-color-scheme:dark){nav button.on{color:var(--gold)}}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line)}.row:first-of-type{border:0}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;display:none;font-size:.9rem}
+</style></head><body>
+<header><h1>Jibo Tech Ladder Academy</h1><p>Climb one skill at a time. Gummi, Zamfara State.</p></header>
+<main>
+<section id="home" class="on">
+ <div class="card"><h2>Welcome</h2><p>This academy teaches practical digital skills from the first click to building websites and games. Each level is a rung. Finish the lessons on one rung to move up.</p><p class="mut" style="margin-top:8px">Facilitator: Ibrahim Lawali</p></div>
+ <div class="card"><b>Your progress</b><p class="mut" id="ptxt"></p><div class="bar"><i id="pbar"></i></div><p style="margin-top:12px"><button class="btn" onclick="go('courses')">Continue learning</button></p></div>
+ <div class="card" id="inst" hidden><b>Install this app</b><p class="mut">Add it to your home screen. It works offline after the first visit.</p><p style="margin-top:10px"><button class="btn" id="ibtn">Install app</button></p></div>
+ <div class="card" id="ios" hidden><b>Install on iPhone</b><p class="mut">Tap Share, then Add to Home Screen.</p></div>
+</section>
+<section id="courses"><h2>Learning ladder</h2><div class="ladder" id="lad"></div></section>
+<section id="sched"><h2>Class schedule</h2><div class="card" id="sch"></div><p class="mut">Times may change. The facilitator will confirm each term.</p></section>
+<section id="reg"><h2>Register</h2><div class="card">
+ <label for="n">Full name</label><input id="n" type="text" autocomplete="name">
+ <label for="p">Phone number</label><input id="p" type="tel" autocomplete="tel">
+ <label for="a">Area or town</label><input id="a" type="text">
+ <label for="l">Starting level</label><select id="l"></select>
+ <label for="m">Message (optional)</label><textarea id="m" rows="3"></textarea>
+ <p style="margin-top:14px"><button class="btn" id="send">Send on WhatsApp</button></p>
+ <p class="mut" style="margin-top:8px">Your details go straight to the facilitator. Nothing is stored on a server.</p></div></section>
+<section id="about"><h2>About</h2>
+ <div class="card"><p>Jibo Tech Ladder Academy helps young people in Gummi and beyond gain digital skills that lead to work, study, and income.</p></div>
+ <div class="card"><b>Contact the facilitator</b><p class="mut">Ibrahim Lawali</p><p style="margin-top:10px"><a class="btn alt" id="wa" href="#">Chat on WhatsApp</a></p></div>
+ <div class="card"><b>Learner guide</b><p class="mut">Come with a notebook. Practise at home. Ask questions. Respect classmates and equipment. Attendance matters.</p></div>
+ <p><button class="btn alt" id="reset">Reset my progress</button></p></section>
+</main>
+<nav id="nav"></nav><div id="toast" role="status"></div>
+<script>
+// EDIT THIS: facilitator WhatsApp number in international format, digits only (example: 2348012345678)
+const WA="234XXXXXXXXXX";
+const LV=[
+{t:"Level 1: Computer Basics",d:"Know your device and use it with confidence.",ls:["Parts of a computer and phone","Switching on, logging in, shutting down safely","Files, folders, and storage","Typing practice and shortcuts","Using a mouse, keyboard, and touch screen"]},
+{t:"Level 2: Office Skills",d:"Write, calculate, and present like a professional.",ls:["Word processing: letters and CVs","Spreadsheets: tables and simple formulas","Presentations: clear slides","Printing, saving, and sharing documents","Making a professional email"]},
+{t:"Level 3: Internet and Safety",d:"Use the web wisely and protect yourself.",ls:["Browsing and searching well","Email and cloud storage","Spotting scams and fake news","Passwords and account security","Online learning and applications"]},
+{t:"Level 4: Create and Build",d:"Turn ideas into digital products.",ls:["Graphic design basics","Introduction to websites with HTML","Introduction to game development","Collecting data with forms and ODK","Final project and presentation"]}];
+const SCH=[["Saturday","Level 1 and Level 2","10:00 AM"],["Sunday","Level 3","4:00 PM"],["Wednesday","Level 4 and practice","5:00 PM"]];
+const $=s=>document.querySelector(s);let st={};try{st=JSON.parse(localStorage.getItem("jibo")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("jibo",JSON.stringify(st))}catch(e){}};
+const toast=t=>{const e=$("#toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",2600)};
+const total=LV.reduce((a,l)=>a+l.ls.length,0);
+function render(){let done=0;$("#lad").innerHTML=LV.map((l,i)=>{const c=l.ls.filter((_,j)=>st["l"+i+j]).length;done+=c;
+return `<details class="rung card ${c==l.ls.length?"done":""}" ${i==0?"open":""}><summary>${l.t}<span class="mut" style="font-weight:400;display:block">${l.d} (${c} of ${l.ls.length})</span></summary>${l.ls.map((x,j)=>`<label class="lesson" style="font-weight:400;margin:0"><input type="checkbox" data-k="l${i}${j}" ${st["l"+i+j]?"checked":""}><span>${x}</span></label>`).join("")}</details>`}).join("");
+const pc=Math.round(done/total*100);$("#pbar").style.width=pc+"%";$("#ptxt").textContent=done?`${done} of ${total} lessons complete (${pc}%)`:"Start your first lesson today.";}
+$("#lad").addEventListener("change",e=>{if(e.target.dataset.k){st[e.target.dataset.k]=e.target.checked;save();const o=[...document.querySelectorAll("details")].map(d=>d.open);render();document.querySelectorAll("details").forEach((d,i)=>d.open=o[i])}});
+$("#sch").innerHTML=SCH.map(r=>`<div class="row"><span><b>${r[0]}</b><br><span class="mut">${r[1]}</span></span><span>${r[2]}</span></div>`).join("");
+$("#l").innerHTML=LV.map(l=>`<option>${l.t}</option>`).join("");
+$("#send").onclick=()=>{const n=$("#n").value.trim(),p=$("#p").value.trim();if(!n||!p){toast("Enter your name and phone number");return}
+const t=`Registration for Jibo Tech Ladder Academy%0AName: ${encodeURIComponent(n)}%0APhone: ${encodeURIComponent(p)}%0AArea: ${encodeURIComponent($("#a").value)}%0ALevel: ${encodeURIComponent($("#l").value)}%0AMessage: ${encodeURIComponent($("#m").value)}`;
+location.href=`https://wa.me/${WA}?text=${t}`};
+$("#wa").href=`https://wa.me/${WA}`;
+$("#reset").onclick=()=>{if(confirm("Clear all your lesson progress?")){st={};save();render();toast("Progress cleared")}};
+const T=[["home","⌂","Home"],["courses","☰","Courses"],["sched","◷","Schedule"],["reg","✎","Register"],["about","ⓘ","About"]];
+$("#nav").innerHTML=T.map(t=>`<button data-t="${t[0]}"><b>${t[1]}</b>${t[2]}</button>`).join("");
+function go(id){document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id==id));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t==id));scrollTo(0,0);history.replaceState(null,"","#"+id)}
+$("#nav").onclick=e=>{const b=e.target.closest("button");if(b)go(b.dataset.t)};
+let dp;addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;$("#inst").hidden=false});
+$("#ibtn").onclick=async()=>{if(dp){dp.prompt();await dp.userChoice;dp=null;$("#inst").hidden=true}};
+addEventListener("appinstalled",()=>{$("#inst").hidden=true;toast("Installed")});
+if(/iphone|ipad/i.test(navigator.userAgent)&&!navigator.standalone)$("#ios").hidden=false;
+render();go(T.some(t=>"#"+t[0]==location.hash)?location.hash.slice(1):"home");
+if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script></body></html>
